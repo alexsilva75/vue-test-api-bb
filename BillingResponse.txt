@@ -1,0 +1,10 @@
+{numero: '00031285570000930999', numeroCarteira: 17, numeroVariacaoCarteira: 35, codigoCliente: 704950857, linhaDigitavel: '00190000090312855700000930999172989760000013000', …}
+beneficiario: {agencia: 452, contaCorrente: 123873, tipoEndereco: 1, logradouro: 'RUA 16 LOTE 1', bairro: 'SUL (AGUAS CLARAS)', …}
+codigoBarraNumerico: "00199897600000130000000003128557000093099917"
+codigoCliente: 704950857
+linhaDigitavel: "00190000090312855700000930999172989760000013000"
+numero: "00031285570000930999"
+numeroCarteira: 17
+numeroContratoCobranca: 19581316
+numeroVariacaoCarteira: 35
+qrCode: {url: '', txId: '', emv: ''}

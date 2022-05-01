@@ -97,7 +97,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import moment from "moment";
+import { mapState } from "pinia";
+import { useTokenStore } from "../stores/token";
 import CurrencyInput from "./CurrencyInput.vue";
+import options from "../globalOptions";
+import axios from "axios";
 export default defineComponent({
   components: {
     CurrencyInput,
@@ -114,8 +118,8 @@ export default defineComponent({
         dataVencimento: "",
         valorOriginal: 130,
         valorAbatimento: 13,
-        quantidadeDiasProtesto: 45,
-        quantidadeDiasNegativacao: 60,
+        quantidadeDiasProtesto: 0,
+        quantidadeDiasNegativacao: 50,
         orgaoNegativador: 10,
         indicadorAceiteTituloVencido: "N",
         numeroDiasLimiteRecebimento: 0,
@@ -125,14 +129,14 @@ export default defineComponent({
         indicadorPermissaoRecebimentoParcial: "N",
         numeroTituloBeneficiario: "123456",
         campoUtilizacaoBeneficiario: "UM TEXTO COM MAIS INFO",
-        numeroTituloCliente: "00031285570000030000",
+        numeroTituloCliente: "00031285570000930991",
         mensagemBloquetoOcorrencia: "Outro texto",
-        desconto: {
-          tipo: 1,
-          dataExpiracao: "",
-          // porcentagem: 0,
-          valor: 5,
-        },
+        // desconto: {
+        //   tipo: 1,
+        //   dataExpiracao: "",
+        //   // porcentagem: 0,
+        //   valor: 5,
+        // },
         // segundoDesconto: {
         //   dataExpiracao: "string",
         //   porcentagem: 0,
@@ -180,6 +184,9 @@ export default defineComponent({
     );
     this.calculateDueDate();
   },
+  computed: {
+    ...mapState(useTokenStore, ["token"]),
+  },
   methods: {
     printMoney(moneyValue: string) {
       console.log(
@@ -200,7 +207,45 @@ export default defineComponent({
     },
     async submitForm() {
       //console.log("Sending data...", this.formInputValues.valorOriginal);
-      const response = await fetch("");
+      // const store = useTokenStore();
+
+      //console.log("Token: ", this.token);
+      //console.log("Form Data: ", JSON.stringify(this.formInputValues));
+      const response = await fetch(
+        `https://cors-anywhere.herokuapp.com/https://api.hm.bb.com.br/cobrancas/v2/boletos?gw-dev-app-key=d27b577900ffab501362e17d10050a56b9d1a5b2`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...this.formInputValues,
+            dataEmissao: moment(this.formInputValues.dataEmissao).format(
+              "DD.MM.YYYY"
+            ),
+            dataVencimento: moment(this.formInputValues.dataVencimento).format(
+              "DD.MM.YYYY"
+            ),
+          }),
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            Accept: "application/json",
+          },
+        }
+      );
+
+      // const responseData = await axios.post(
+      //   //`${options.sandboxURL}/boletos?gw-dev-app-key=${options.developer_application_key}`,
+      //   "https://api.hm.bb.com.br/cobrancas/v2/boletos?gw-dev-app-key=d27b577900ffab501362e17d10050a56b9d1a5b2",
+      //   this.formInputValues,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${this.token}`,
+      //       Accept: "application/json",
+      //     },
+      //     //withCredentials: true,
+      //   }
+      // ); //await response.json();
+
+      const responseData = await response.json();
+      console.log("Billing response: ", responseData);
     },
   },
 });
