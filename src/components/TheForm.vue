@@ -4,90 +4,337 @@
     <form class="py-4" @submit.prevent="submitForm">
       <fieldset>
         <legend>Dados do Boleto</legend>
-        <div class="py-3">
-          <label for="" class="form-label">Número do Convênio</label>
-          <input
-            type="text"
-            v-model="formInputValues.numeroConvenio"
-            class="form-control"
-          />
+
+        <div class="row align-items-center g-3">
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Número do Convênio</label>
+            <input
+              type="text"
+              v-model="formInputValues.numeroConvenio"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Número da Carteira</label>
+            <input
+              type="text"
+              v-model="formInputValues.numeroCarteira"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label"
+              >Número da Variação da Carteira</label
+            >
+            <input
+              type="text"
+              v-model="formInputValues.numeroVariacaoCarteira"
+              class="form-control"
+            />
+          </div>
+
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Código da Modalidade</label>
+            <input
+              type="text"
+              v-model="formInputValues.codigoModalidade"
+              class="form-control"
+            />
+          </div>
         </div>
-        <div class="py-3">
-          <label for="" class="form-label">Número da Carteira</label>
-          <input
-            type="text"
-            v-model="formInputValues.numeroCarteira"
-            class="form-control"
-          />
+
+        <div class="row align-items-center g-3">
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Data de Emissao</label>
+            <input
+              type="date"
+              @change="calculateDueDate"
+              v-model="formInputValues.dataEmissao"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Data de Vencimento</label>
+            <input
+              type="date"
+              disabled
+              v-model="formInputValues.dataVencimento"
+              class="form-control"
+            />
+          </div>
         </div>
+
+        <div class="row align-items-center g-3">
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Valor Original</label>
+            <CurrencyInput
+              v-model="formInputValues.valorOriginal"
+              class="form-control"
+              :options="{ currency: 'BRL', autoDecimalDigits: true }"
+            ></CurrencyInput>
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Valor Abatimento</label>
+            <CurrencyInput
+              v-model="formInputValues.valorAbatimento"
+              class="form-control"
+              :options="{ currency: 'BRL', autoDecimalDigits: true }"
+            ></CurrencyInput>
+          </div>
+        </div>
+
+        <div class="row align-items-center g-3">
+          <div class="py-3 col-auto">
+            <label for="" class="form-label"
+              >Quantidade de Dias para Protesto</label
+            >
+            <input
+              type="number"
+              v-model="formInputValues.quantidadeDiasProtesto"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label"
+              >Quantidade de Dias para Negativação</label
+            >
+            <input
+              type="number"
+              v-model="formInputValues.quantidadeDiasNegativacao"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Orgão Negativador</label>
+            <select
+              v-model="formInputValues.orgaoNegativador"
+              name=""
+              id=""
+              class="form-select"
+            >
+              <option value="10" selected>10</option>
+              <option value="11">11</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row align-items-center g-3">
+          <div class="py-3 col-auto">
+            <label for="" class="form-label"
+              >Indicador de Aceite de Título Vencido</label
+            >
+            <select
+              name=""
+              id=""
+              v-model="formInputValues.indicadorAceiteTituloVencido"
+              class="form-select"
+            >
+              <option value="S">S</option>
+              <option value="N" selected>N</option>
+            </select>
+          </div>
+
+          <div class="py-3 col-auto">
+            <label for="" class="form-label"
+              >Número de Dias Limite Recebimento</label
+            >
+            <input
+              type="number"
+              v-model="formInputValues.numeroDiasLimiteRecebimento"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Código de Aceite</label>
+            <input
+              type="text"
+              v-model="formInputValues.codigoAceite"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="row align-items-center g-3">
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Código Tipo Título</label>
+            <input
+              type="number"
+              disabled
+              v-model="formInputValues.codigoTipoTitulo"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label">Descrição do Tipo do Título</label>
+            <input
+              type="text"
+              disabled
+              v-model="formInputValues.descricaoTipoTitulo"
+              class="form-control"
+            />
+          </div>
+          <div class="py-3 col-auto">
+            <label for="" class="form-label"
+              >Indicador de Permissão de Recebimento Parcial</label
+            >
+            <select
+              name=""
+              id=""
+              v-model="formInputValues.indicadorPermissaoRecebimentoParcial"
+              class="form-select"
+            >
+              <option value="S">S</option>
+              <option value="N" selected>N</option>
+            </select>
+          </div>
+        </div>
+
         <div class="py-3">
           <label for="" class="form-label"
-            >Número da Variação da Carteira</label
-          >
+            >Número do Título do Beneficiário
+          </label>
           <input
             type="text"
-            v-model="formInputValues.numeroVariacaoCarteira"
-            class="form-control"
-          />
-        </div>
-        <div class="py-3">
-          <label for="" class="form-label">Código da Modalidade</label>
-          <input
-            type="text"
-            v-model="formInputValues.codigoModalidade"
-            class="form-control"
-          />
-        </div>
-        <div class="py-3">
-          <label for="" class="form-label">Data de Emissao</label>
-          <input
-            type="date"
-            @change="calculateDueDate"
-            v-model="formInputValues.dataEmissao"
-            class="form-control"
-          />
-        </div>
-        <div class="py-3">
-          <label for="" class="form-label">Data de Vencimento</label>
-          <input
-            type="date"
             disabled
-            v-model="formInputValues.dataVencimento"
+            v-model="formInputValues.numeroTituloBeneficiario"
             class="form-control"
           />
-        </div>
-        <div class="py-3">
-          <label for="" class="form-label">Valor Original</label>
-          <CurrencyInput
-            v-model="formInputValues.valorOriginal"
-            class="form-control"
-            :options="{ currency: 'BRL', autoDecimalDigits: true }"
-          ></CurrencyInput>
-        </div>
-        <div class="py-3">
-          <label for="" class="form-label">Valor Abatimento</label>
-          <CurrencyInput
-            v-model="formInputValues.valorAbatimento"
-            class="form-control"
-            :options="{ currency: 'BRL', autoDecimalDigits: true }"
-          ></CurrencyInput>
         </div>
         <div class="py-3">
           <label for="" class="form-label"
-            >Quantidade de Dias para Protesto</label
-          >
+            >Campo de Utilização do Beneficiário
+          </label>
           <input
-            v-model="formInputValues.quantidadeDiasProtesto"
+            type="text"
+            maxlength="30"
+            v-model="formInputValues.campoUtilizacaoBeneficiario"
             class="form-control"
-            :options="{ currency: 'BRL', autoDecimalDigits: true }"
           />
+        </div>
+        <div class="py-3">
+          <label for="" class="form-label">Número do Título do Cliente </label>
+          <input
+            type="text"
+            v-model="formInputValues.numeroTituloCliente"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label for="" class="form-label">Mensagem Bloqueto Ocorrência </label>
+          <textarea
+            class="form-control"
+            v-model="formInputValues.mensagemBloquetoOcorrencia"
+            name=""
+            id=""
+            cols="30"
+            rows="3"
+          ></textarea>
         </div>
       </fieldset>
       <fieldset>
         <legend>Dados do Pagador</legend>
         <div class="py-3">
-          <label for="sacado" class="form-label"></label>
-          <input type="text" id="sacado" class="form-control" />
+          <label for="nome" class="form-label">Nome</label>
+          <input
+            type="text"
+            v-model="formInputValues.pagador.nome"
+            id="nome"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Tipo de Inscrição</label>
+          <input
+            type="number"
+            v-model="formInputValues.pagador.tipoInscricao"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Número de Inscrição (CPF/CNPJ)</label>
+          <input
+            type="number"
+            v-model="formInputValues.pagador.numeroInscricao"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Endereço</label>
+          <textarea
+            name=""
+            id=""
+            cols="30"
+            rows="3"
+            class="form-control"
+            v-model="formInputValues.pagador.endereco"
+          ></textarea>
+        </div>
+        <div class="py-3">
+          <label class="form-label">CEP</label>
+          <input
+            type="number"
+            v-model="formInputValues.pagador.cep"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Cidade</label>
+          <input
+            type="text"
+            v-model="formInputValues.pagador.cidade"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Bairro</label>
+          <input
+            type="text"
+            v-model="formInputValues.pagador.bairro"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">UF</label>
+          <input
+            type="text"
+            v-model="formInputValues.pagador.uf"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Telefone</label>
+          <input
+            type="text"
+            v-model="formInputValues.pagador.telefone"
+            class="form-control"
+          />
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Dados do Beneficiário</legend>
+        <div class="py-3">
+          <label class="form-label">Nome</label>
+          <input
+            type="text"
+            v-model="formInputValues.beneficiarioFinal.nome"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Tipo de Inscrição</label>
+          <input
+            type="number"
+            v-model="formInputValues.beneficiarioFinal.tipoInscricao"
+            class="form-control"
+          />
+        </div>
+        <div class="py-3">
+          <label class="form-label">Número de Inscrição (CPF/CNPJ)</label>
+          <input
+            type="number"
+            v-model="formInputValues.beneficiarioFinal.numeroInscricao"
+            class="form-control"
+          />
         </div>
       </fieldset>
       <button type="submit" class="btn btn-primary">Enviar</button>

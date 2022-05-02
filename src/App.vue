@@ -44,7 +44,9 @@ async function getAPIToken() {
               <RouterLink class="nav-link" to="/">Home</RouterLink>
             </li>
             <li class="nav-item">
-              <RouterLink class="nav-link" to="/about">About</RouterLink>
+              <RouterLink class="nav-link" to="/list"
+                >Listar Boletos</RouterLink
+              >
             </li>
             <li class="nav-item">
               <a href="#" @click.prevent="getAPIToken" class="btn btn-primary"
