@@ -15,7 +15,7 @@ export const useBillsStore = defineStore({
       const tokenStore = useTokenStore();
       console.log("Token Store Token: ", tokenStore.token);
       const response = await fetch(
-        `http://localhost:8080/${options.sandboxURL}/boletos?gw-dev-app-key=${options.developer_application_key}&indicadorSituacao=A`,
+        `http://localhost:8080/${options.sandboxURL}/boletos?gw-dev-app-key=${options.developer_application_key}&indicadorSituacao=A&agenciaBeneficiario=452&contaBeneficiario=123873&`,
         {
           method: "GET",
 
@@ -27,6 +27,7 @@ export const useBillsStore = defineStore({
 
       const responseData = await response.json();
 
+      this.bills = responseData.boletos;
       console.log("Bills List: ", responseData);
     },
   },
