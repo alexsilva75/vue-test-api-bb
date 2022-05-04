@@ -458,25 +458,22 @@ export default defineComponent({
 
       //console.log("Token: ", this.token);
       //console.log("Form Data: ", JSON.stringify(this.formInputValues));
-      const response = await fetch(
-        `https://cors-anywhere.herokuapp.com/https://api.hm.bb.com.br/cobrancas/v2/boletos?gw-dev-app-key=d27b577900ffab501362e17d10050a56b9d1a5b2`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...this.formInputValues,
-            dataEmissao: moment(this.formInputValues.dataEmissao).format(
-              "DD.MM.YYYY"
-            ),
-            dataVencimento: moment(this.formInputValues.dataVencimento).format(
-              "DD.MM.YYYY"
-            ),
-          }),
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${options.proxyBaseURL}/boletos`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...this.formInputValues,
+          dataEmissao: moment(this.formInputValues.dataEmissao).format(
+            "DD.MM.YYYY"
+          ),
+          dataVencimento: moment(this.formInputValues.dataVencimento).format(
+            "DD.MM.YYYY"
+          ),
+        }),
+        headers: {
+          //Authorization: `Bearer ${this.token}`,
+          Accept: "application/json",
+        },
+      });
 
       // const responseData = await axios.post(
       //   //`${options.sandboxURL}/boletos?gw-dev-app-key=${options.developer_application_key}`,
